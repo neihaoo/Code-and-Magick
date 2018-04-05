@@ -19,11 +19,11 @@ var generateWizardsData = function () {
 
   for (var i = 0; i < ARRAY_WIZARD_LENGTH; i++) {
     wizards.push(
-        {
-          name: getRandomElement(FIRST_NAME) + ' ' + getRandomElement(SECOND_NAME),
-          coatColor: getRandomElement(CLOTHES_COLOR),
-          eyesColor: getRandomElement(EYES_COLOR)
-        }
+      {
+        name: getRandomElement(FIRST_NAME) + ' ' + getRandomElement(SECOND_NAME),
+        coatColor: getRandomElement(CLOTHES_COLOR),
+        eyesColor: getRandomElement(EYES_COLOR)
+      }
     );
   }
 
