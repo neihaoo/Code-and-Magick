@@ -5,7 +5,13 @@ var ENTER_KEYCODE = 13;
 var ARRAY_WIZARD_LENGTH = 4;
 var FIRST_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
 var SECOND_NAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
-var CLOTHES_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
+var CLOTHES_COLORS = [
+  'rgb(101, 137, 164)',
+  'rgb(241, 43, 107)',
+  'rgb(146, 100, 161)',
+  'rgb(56, 159, 117)',
+  'rgb(215, 210, 55)',
+  'rgb(0, 0, 0)'];
 var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var FIREBALLS_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 
@@ -13,15 +19,14 @@ var userDialog = document.querySelector('.setup');
 var userDialogOpen = document.querySelector('.setup-open');
 var userDialogClose = userDialog.querySelector('.setup-close');
 var userNameInput = userDialog.querySelector('.setup-user-name');
-var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
+var similarWizardTemplate = document.querySelector('#similar-wizard-template')
+    .content.querySelector('.setup-similar-item');
 var similarListElement = userDialog.querySelector('.setup-similar-list');
 var wizardEyes = userDialog.querySelector('.setup-wizard .wizard-eyes');
 var wizardFireball = userDialog.querySelector('.setup-fireball-wrap');
 
 var onModalWindowEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    hideModalWindow();
-  }
+  return evt.keyCode === ESC_KEYCODE && document.activeElement !== userNameInput ? hideModalWindow() : userNameInput.blur();
 };
 
 var getRandomElement = function (array) {
@@ -63,7 +68,9 @@ var addElementsOnPage = function (arg) {
 };
 
 var showModalWindow = function () {
-  similarListElement.appendChild(addElementsOnPage(generateWizardsData()));
+  if (similarListElement.childElementCount < ARRAY_WIZARD_LENGTH) {
+    similarListElement.appendChild(addElementsOnPage(generateWizardsData()));
+  }
   userDialog.querySelector('.setup-similar').classList.remove('hidden');
   userDialog.classList.remove('hidden');
   document.addEventListener('keydown', onModalWindowEscPress);
@@ -73,10 +80,6 @@ var hideModalWindow = function () {
   document.removeEventListener('keydown', onModalWindowEscPress);
   userDialog.classList.add('hidden');
   userDialog.querySelector('.setup-similar').classList.add('hidden');
-
-  while (similarListElement.childNodes[1]) {
-    similarListElement.removeChild(similarListElement.childNodes[1]);
-  }
 };
 
 userDialogOpen.addEventListener('click', function () {
