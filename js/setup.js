@@ -26,7 +26,13 @@ var wizardEyes = userDialog.querySelector('.setup-wizard .wizard-eyes');
 var wizardFireball = userDialog.querySelector('.setup-fireball-wrap');
 
 var onModalWindowEscPress = function (evt) {
-  return evt.keyCode === ESC_KEYCODE && document.activeElement !== userNameInput ? hideModalWindow() : userNameInput.blur();
+  if (evt.keyCode === ESC_KEYCODE) {
+    if (evt.target.className !== 'setup-user-name') {
+      hideModalWindow();
+    } else {
+      userNameInput.blur();
+    }
+  }
 };
 
 var getRandomElement = function (array) {
