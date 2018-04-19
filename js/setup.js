@@ -24,6 +24,9 @@ var similarWizardTemplate = document.querySelector('#similar-wizard-template')
 var similarListElement = userDialog.querySelector('.setup-similar-list');
 var wizardEyes = userDialog.querySelector('.setup-wizard .wizard-eyes');
 var wizardFireball = userDialog.querySelector('.setup-fireball-wrap');
+var shopElement = document.querySelector('.setup-artifacts-shop');
+var artifactsElement = document.querySelector('.setup-artifacts');
+var draggedElement;
 
 var onModalWindowEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
@@ -142,4 +145,51 @@ wizardFireball.addEventListener('click', function () {
 
   wizardFireball.setAttribute('style', 'background-color: ' + fireballColor);
   userDialog.querySelector('input[name="fireball-color"]').value = fireballColor;
+});
+
+shopElement.addEventListener('dragstart', function (evt) {
+  draggedElement = evt.target.cloneNode(true);
+  artifactsElement.setAttribute('style', 'outline: 2px dashed red');
+});
+
+shopElement.addEventListener('dragend', function () {
+  artifactsElement.removeAttribute('style');
+});
+
+artifactsElement.addEventListener('dragstart', function (evt) {
+  draggedElement = evt.target;
+  artifactsElement.setAttribute('style', 'outline: 2px dashed red');
+});
+
+artifactsElement.addEventListener('dragenter', function (evt) {
+  if (!evt.target.closest('.setup-artifacts-cell').firstChild) {
+    evt.target.setAttribute('style', 'background-color: yellow');
+  }
+});
+
+artifactsElement.addEventListener('dragover', function (evt) {
+  evt.preventDefault();
+
+  if (evt.target.closest('.setup-artifacts-cell').firstChild) {
+    evt.dataTransfer.dropEffect = 'none';
+  }
+});
+
+artifactsElement.addEventListener('dragleave', function (evt) {
+  evt.target.removeAttribute('style');
+});
+
+artifactsElement.addEventListener('drop', function (evt) {
+  evt.preventDefault();
+
+  artifactsElement.removeAttribute('style');
+  evt.target.removeAttribute('style');
+
+  if (!evt.target.closest('.setup-artifacts-cell').firstChild) {
+    evt.target.appendChild(draggedElement);
+  }
+});
+
+artifactsElement.addEventListener('dragend', function () {
+  artifactsElement.removeAttribute('style');
 });
