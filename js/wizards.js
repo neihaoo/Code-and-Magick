@@ -30,5 +30,5 @@
     }
   };
 
-  window.wizards = renderWizards;
+  window.renderWizards = renderWizards;
 })();

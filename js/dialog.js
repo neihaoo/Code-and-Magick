@@ -23,7 +23,7 @@
   };
 
   var showModalWindow = function () {
-    window.wizards();
+    window.renderWizards();
     userAvatar.setAttribute('style', 'z-index: 1');
     userDialog.querySelector('.setup-similar').classList.remove('hidden');
     userDialog.classList.remove('hidden');
