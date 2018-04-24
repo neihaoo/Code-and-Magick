@@ -11,6 +11,7 @@
   var userNameInput = userDialog.querySelector('.setup-user-name');
   var wizardEyes = userDialog.querySelector('.setup-wizard .wizard-eyes');
   var wizardFireball = userDialog.querySelector('.setup-fireball-wrap');
+  var form = userDialog.querySelector('.setup-wizard-form');
 
   var onModalWindowEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
@@ -23,7 +24,7 @@
   };
 
   var showModalWindow = function () {
-    window.renderWizards();
+    window.backend.load(window.wizards.onLoad, window.utils.onError);
     userAvatar.setAttribute('style', 'z-index: 1');
     userDialog.querySelector('.setup-similar').classList.remove('hidden');
     userDialog.classList.remove('hidden');
@@ -35,6 +36,7 @@
     userDialog.classList.add('hidden');
     userDialog.removeAttribute('style');
     userDialog.querySelector('.setup-similar').classList.add('hidden');
+    userDialog.querySelector('.setup-similar-list').textContent = '';
   };
 
   userDialogOpen.addEventListener('click', function () {
@@ -80,8 +82,8 @@
         y: moveEvt.clientY
       };
 
-      userDialog.setAttribute('style', 'top: ' + (userDialog.offsetTop - shift.y) + 'px');
-      userDialog.setAttribute('style', 'left: ' + (userDialog.offsetTop - shift.x) + 'px');
+      userDialog.style.top = (userDialog.offsetTop - shift.y) + 'px';
+      userDialog.style.left = (userDialog.offsetLeft - shift.x) + 'px';
     };
 
     var onMouseUp = function (upEvt) {
@@ -118,14 +120,22 @@
   });
 
   wizardEyes.addEventListener('click', function () {
-    wizardEyes.setAttribute('style', 'fill: ' + window.getRandomElement(window.data.eyesColors));
+    wizardEyes.setAttribute('style', 'fill: ' + window.utils.getRandomElement(window.data.eyesColors));
     userDialog.querySelector('input[name="eyes-color"]').setAttribute('value', wizardEyes.style.fill);
   });
 
   wizardFireball.addEventListener('click', function () {
-    var fireballColor = window.getRandomElement(window.data.fireballsColors);
+    var fireballColor = window.utils.getRandomElement(window.data.fireballsColors);
 
     wizardFireball.setAttribute('style', 'background-color: ' + fireballColor);
     userDialog.querySelector('input[name="fireball-color"]').setAttribute('value', fireballColor);
+  });
+
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+
+    window.backend.save(new FormData(form), function () {
+      hideModalWindow();
+    }, window.utils.onError);
   });
 })();
