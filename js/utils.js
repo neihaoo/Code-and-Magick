@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var lastTimeout;
+
   var getRandomElement = function (arr) {
     return arr[Math.floor(Math.random() * arr.length)];
   };
@@ -16,6 +18,24 @@
     return arr;
   };
 
+  var compareStrings = function (a, b) {
+    if (a > b) {
+      return 1;
+    } else if (a < b) {
+      return -1;
+    } else {
+      return 0;
+    }
+  };
+
+  var debounce = function (fun, timeout) {
+    if (lastTimeout) {
+      clearTimeout(lastTimeout);
+    }
+
+    lastTimeout = setTimeout(fun, timeout);
+  };
+
   var onUserDialogError = function (errorMessage) {
     var node = document.createElement('div');
 
@@ -29,9 +49,11 @@
   };
 
   window.utils = {
+    debounce: debounce,
     onError: onUserDialogError,
     getRandomElement: getRandomElement,
-    shuffleElements: shuffleElements
+    shuffleElements: shuffleElements,
+    compare: compareStrings
   };
 })();
 
