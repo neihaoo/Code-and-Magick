@@ -10,6 +10,7 @@
   var userAvatar = userDialog.querySelector('.setup-user-pic');
   var userNameInput = userDialog.querySelector('.setup-user-name');
   var wizardEyes = userDialog.querySelector('.setup-wizard .wizard-eyes');
+  var wizardCoat = userDialog.querySelector('.setup-wizard .wizard-coat');
   var wizardFireball = userDialog.querySelector('.setup-fireball-wrap');
   var form = userDialog.querySelector('.setup-wizard-form');
 
@@ -120,8 +121,19 @@
   });
 
   wizardEyes.addEventListener('click', function () {
-    wizardEyes.setAttribute('style', 'fill: ' + window.utils.getRandomElement(window.data.eyesColors));
-    userDialog.querySelector('input[name="eyes-color"]').setAttribute('value', wizardEyes.style.fill);
+    var eyesColor = window.utils.getRandomElement(window.data.eyesColors);
+
+    window.wizards.onEyesChange(eyesColor);
+    wizardEyes.setAttribute('style', 'fill: ' + eyesColor);
+    userDialog.querySelector('input[name="eyes-color"]').setAttribute('value', eyesColor);
+  });
+
+  wizardCoat.addEventListener('click', function () {
+    var coatColor = window.utils.getRandomElement(window.data.coatColors);
+
+    window.wizards.onCoatChange(coatColor);
+    wizardCoat.setAttribute('style', 'fill: ' + coatColor);
+    userDialog.querySelector('input[name="coat-color"]').setAttribute('value', coatColor);
   });
 
   wizardFireball.addEventListener('click', function () {
