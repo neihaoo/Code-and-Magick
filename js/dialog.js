@@ -3,6 +3,9 @@
 (function () {
   var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png', 'webp'];
+
+  var dialogMoved = false;
 
   var userDialog = document.querySelector('.setup');
   var userDialogOpen = document.querySelector('.setup-open');
@@ -13,6 +16,7 @@
   var wizardCoat = userDialog.querySelector('.setup-wizard .wizard-coat');
   var wizardFireball = userDialog.querySelector('.setup-fireball-wrap');
   var form = userDialog.querySelector('.setup-wizard-form');
+  var avatarChooser = document.querySelector('.upload input[type=file]');
 
   var onModalWindowEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
@@ -26,7 +30,6 @@
 
   var showModalWindow = function () {
     window.backend.load(window.wizards.onLoad, window.utils.onError);
-    userAvatar.setAttribute('style', 'z-index: 1');
     userDialog.querySelector('.setup-similar').classList.remove('hidden');
     userDialog.classList.remove('hidden');
     document.addEventListener('keydown', onModalWindowEscPress);
@@ -38,6 +41,28 @@
     userDialog.removeAttribute('style');
     userDialog.querySelector('.setup-similar').classList.add('hidden');
     userDialog.querySelector('.setup-similar-list').textContent = '';
+  };
+
+  var changeAvatar = function () {
+    var file = avatarChooser.files[0];
+    var fileName = file.name.toLowerCase();
+
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+
+    if (matches) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        userAvatar.src = reader.result;
+      });
+
+      reader.readAsDataURL(file);
+
+    } else {
+      window.utils.onError('Неверный формат. Допустимые форматы: ' + FILE_TYPES.join(', ') + '.');
+    }
   };
 
   userDialogOpen.addEventListener('click', function () {
@@ -62,7 +87,18 @@
     }
   });
 
-  userAvatar.addEventListener('mousedown', function (evt) {
+  avatarChooser.addEventListener('click', function (evt) {
+    if (dialogMoved) {
+      evt.preventDefault();
+      dialogMoved = false;
+    }
+  });
+
+  avatarChooser.addEventListener('change', function () {
+    changeAvatar();
+  });
+
+  avatarChooser.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
     var startCoords = {
@@ -82,6 +118,8 @@
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
+
+      dialogMoved = true;
 
       userDialog.style.top = (userDialog.offsetTop - shift.y) + 'px';
       userDialog.style.left = (userDialog.offsetLeft - shift.x) + 'px';
